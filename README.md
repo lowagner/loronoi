@@ -5,7 +5,24 @@ loronoi
 
 
 Requires:
+
     python
+
     python-numpy
-    python-scipy - recent version which includes spatial.Voronoi
+
+    python-scipy - a more recent version which includes spatial.Voronoi
+
     python-visual
+
+
+How to use:
+
+The Loronoi class is held in the Loronoi.py file.
+Check it out.
+
+
+An example of how to use the class is in test.py.  Run:
+
+python test.py
+
+
