@@ -31,6 +31,103 @@ lor = Loronoi(points)
 
 lor.plot()
 
+minideltakey = 0.05
+megadeltakey = 0.15
+#prose = label()
+scene.right = cross( scene.forward, scene.up )
+scene.autoscale = False
+
+centerball = sphere(pos=scene.center, color=(1,1,1), radius=0.01)
+centerhelix = helix(pos=scene.center, color=(0.5,0.5,0.5), radius=0.05, thickness=0.01, axis=scene.forward*0.001, coils=1)
+scene.lights = [ distant_light( direction=-scene.up, color=color.gray(0.8) ),
+                         distant_light( direction=-scene.forward, color=color.gray(0.5) ) ]
 while True:
     rate(60)
-    #scene.center.y += 0.01
+    if scene.kb.keys: # event waiting to be processed?
+        string = scene.kb.getkey() # get keyboard info
+        alts = string.split("+")
+        if len(alts) > 1:
+            alt = alts[0]
+            deltakey = megadeltakey
+            s = alts[1]
+        else:
+            s = alts[0]
+            if s.upper() == s:
+                alt = "shift"
+                s = s.lower() 
+                deltakey = megadeltakey
+            else:
+                alt = ""
+                deltakey = minideltakey
+
+        if (s == "left"):
+            deltaforward = -scene.right
+            scene.forward += deltakey*deltaforward
+            scene.forward /= mag(scene.forward)
+
+            scene.right = cross( scene.forward, scene.up )
+
+        elif (s == "right"):
+            deltaforward = scene.right
+            scene.forward += deltakey*deltaforward
+            scene.forward /= mag(scene.forward)
+            
+            scene.right = cross( scene.forward, scene.up )
+
+        elif (s == "up"):
+            deltaforward = scene.up
+
+            scene.forward += deltakey*deltaforward
+            scene.forward /= mag(scene.forward)
+            
+            scene.up = cross( scene.right, scene.forward )
+
+        elif (s == "down"):
+            deltaforward = -scene.up
+
+            scene.forward += deltakey*deltaforward
+            scene.forward /= mag(scene.forward)
+            
+            scene.up = cross( scene.right, scene.forward )
+
+        elif (s == "w"):
+            scene.center += deltakey*scene.up
+
+        elif (s == "a"):
+            scene.center -= deltakey*scene.right
+        
+        elif (s == "s"):
+            scene.center -= deltakey*scene.up
+
+        elif (s == "d"):
+            scene.center += deltakey*scene.right
+        
+        elif (s == "q"):
+            scene.center -= deltakey*scene.forward
+        
+        elif (s == "e"):
+            scene.center += deltakey*scene.forward
+
+#       # these next guys don't work in my vpython for some reason.
+#        elif (s == "z"):
+#            scene.scale *= 1.1*deltakey
+#        
+#        elif (s == "c"):
+#            scene.scale *= 0.9*deltakey
+
+        scene.lights = [ distant_light( direction=-scene.up, color=color.gray(0.8) ),
+                         distant_light( direction=-scene.forward, color=color.gray(0.5) )
+                       ]
+#        elif ((s == 'backspace' or s == 'delete') and
+#            len(prose.text)) > 0: 
+#            prose.text = prose.text[:-1] # erase letter
+#        elif s == 'shift+delete': 
+#            prose.text = '' # erase all text
+#        else: #if len(s) == 1: 
+#            prose.text += s # append new character
+
+        centerball.pos = scene.center
+        centerhelix.pos = scene.center
+        centerhelix.axis = scene.forward*0.001
+
+
